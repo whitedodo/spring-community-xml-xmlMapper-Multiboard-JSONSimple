@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.community.website.mapper.MemberMapper">
+ 
+ 	<!-- 회원 찾기 -->
+    <select id="select" resultType="MemberVO">
+        SELECT * from communities_member where idx = #{idx}
+    </select>
+    
+    <!-- 회원 존재 여부 -->
+    <select id="selectCount" resultType="Long">
+    	SELECT count(*) from communities_member 
+    </select>
+    
+    <!-- 이름, 비밀번호 확인 -->
+    <select id="selectCheckMember" parameterType="MemberVO" resultType="MemberVO">
+        SELECT * from communities_member where username = #{username}
+        and passwd = #{passwd}
+    </select>
+    
+	<!-- select 쿼리 (ALL) -->
+	<select id="selectAll" resultType="MemberVO">
+		<![CDATA[ 
+				select * from communities_member
+		]]>			
+	</select>
+	
+    <!--  insert 쿼리 --> 
+	<insert id="insertMember" parameterType="MemberVO">
+		insert into communities_member(username, passwd, regidate)
+		 values(#{username}, #{passwd}, #{regidate})
+	</insert>
+
+	<!-- update 쿼리 -->	
+	<update id="updateMember" parameterType="MemberVO">
+		update communities_member set passwd = #{passwd} 
+										 where username = #{username}
+	</update>
+	
+	<!-- delete 쿼리 -->
+	<delete id="deleteMember" parameterType="String">
+		delete from communities_member where idx=#{idx}
+	</delete>
+    
+</mapper>

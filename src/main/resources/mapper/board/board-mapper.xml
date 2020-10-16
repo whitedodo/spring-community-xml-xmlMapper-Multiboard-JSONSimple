@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ref: https://mybatis.org/mybatis-3/apidocs/reference/org/apache/ibatis/binding/MapperMethod.ParamMap.html#ParamMap() -->
+
+<mapper namespace="com.community.website.mapper.BoardMapper">
+
+	<select id="selectAll" resultType="BoardVO">
+		select * from board
+	</select>
+	
+	<select id="selectBoardCnt" resultType="Long">
+		select count(*) from board_${boardname}
+	</select>
+	
+	<select id="selectPagingBoard" resultType="BoardVO">
+		<![CDATA[ 
+			SELECT * FROM ( 
+				SELECT /*+ INDEX_DESC(Z OP_SAMPLE_PK) */ ROWNUM AS RNUM, Z.* FROM ( 
+				SELECT * FROM board_${boardname} order by id desc 
+				) Z WHERE ROWNUM <= #{end}
+			) WHERE RNUM >= #{start}
+		]]>
+	</select>
+	
+	<select id="selectBoard" resultType="BoardVO">
+		select * from board_${boardname} where id = #{id}
+	</select>
+	
+	<insert id="insertBoard" parameterType="com.community.website.vo.BoardVO">
+		insert into board_${boardname}(name, subject, memo, count, regidate)
+		values 
+		(#{name},#{subject},#{memo},#{count},#{regidate})
+	</insert>
+	
+	<insert id="insertSample" parameterType="com.community.website.vo.BoardMultiVO">
+		insert into board_${boardname}(name, subject, memo, count, regidate)
+		values 
+		(#{name}, #{subject}, #{memo}, #{count}, #{regidate})
+	</insert>
+	
+<!-- 
+	<select id="allAddress" resultType="com.edu.db.AddressDto">
+		select * from addressbook
+	</select>
+	<select id="selectAddress" parameterType="Integer" resultType="com.edu.db.AddressDto">
+		select NUM, NAME, ADDRESS, BIRTHDATE
+		 from addressbook
+		  where num=#{num}
+	</select>
+	<insert id="insertAddress" parameterType="com.edu.db.AddressDto">
+		insert into
+		addressbook(NAME, ADDRESS, BIRTHDATE)
+		values
+		(#{name},#{address},#{birthdate})
+	</insert>
+	<delete id="deleteAddress" parameterType="Integer">
+		DELETE FROM AddressBook
+		WHERE NUM = #{num}
+	</delete>
+	<update id="updateAddress" parameterType="com.edu.db.AddressDto" >
+		update addressbook
+		set birthdate = #{birthdate}, name = #{name}, address =#{address}
+		where num = #{num}
+	</update>
+ -->
+</mapper>

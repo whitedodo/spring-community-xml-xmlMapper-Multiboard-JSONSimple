@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+		
+	<!--  XML 방식의 AOP - AsepectJ Weaver -->
+	<!-- 유의할 점: AOP 쓸 때는 interface 절대 안 됨 -->
+	<!-- 관점 부분만 가능함 -->
+	<bean id="memberService" class="com.community.website.service.aop.MemberService"></bean>
+	<bean id="txAdviceXML" class="com.community.website.aop.member.LogAdvisorImpl"></bean>
+
+	<aop:config>
+		<!-- txAdviceXML 하나 영역임 -->
+		<aop:aspect ref='txAdviceXML'>
+
+			<!-- 진입영역 -->
+			<!-- 1개만 가능함 -->
+			<!-- <aop:pointcut id="point1" expression="execution(* com.website.example.test..*())"/> -->
+			<!-- update*(..) update로 시작하는 모든 메소드 -->
+			<aop:pointcut id="point1" expression="execution(* com.community.website.service.aop.MemberService..*(..))"/>            
+         	
+         	<!-- before -->
+         	<aop:before method="beforeAdvice" pointcut-ref="point1"/>
+         	<!-- after -->
+         	<aop:after method="afterAdvice" pointcut-ref="point1"/>
+         	
+         	<!-- around(메서드 자체를 가로채기) -->
+         	<aop:around method="aroundAdvice" pointcut-ref="point1"/>
+         	
+         	<!-- afterThrowing -->
+         	<aop:after-throwing method="afterThrowing" pointcut-ref="point1"/>
+         	
+         	<!-- afterReturning -->
+         	<aop:after-returning method="afterReturning" pointcut-ref="point1"/>
+         	
+        </aop:aspect>
+        
+        <!-- 2번째 선언자 -->
+	</aop:config>
+	
+	<!-- Beans Scan -->
+	<context:component-scan base-package="com.community.website.dao.aop"></context:component-scan>
+	<context:component-scan base-package="com.community.website.service.aop"></context:component-scan>
+	
+</beans>

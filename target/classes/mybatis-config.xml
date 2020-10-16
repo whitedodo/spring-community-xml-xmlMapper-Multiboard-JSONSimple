@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- Ref: https://mybatis.org/mybatis-3/ko/configuration.html -->
+<!-- Mapper Classes --> 
+<configuration>
+
+	<!-- Alias 지정해주면 직접 경로 입력 안해도 됨 -->
+	<typeAliases>
+		<typeAlias alias="BoardVO" type="com.community.website.vo.BoardVO" />
+		<typeAlias alias="MemberVO" type="com.community.website.vo.MemberVO" />
+	</typeAliases>
+	
+	<!-- MyBatis Mapper 파일이 추가될 때마다 추가할 것 -->
+	<!-- RootContext.xml 파일 설정하고는 별개이다. -->
+    <mappers>
+        <mapper resource="com/community/website/mapper/member_mapping.xml"/>
+    </mappers>
+    
+</configuration>
